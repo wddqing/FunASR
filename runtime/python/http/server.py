@@ -105,6 +105,9 @@ async def api_recognition(audio: UploadFile = File(..., description="audio file"
     except Exception as e:
         logger.error(f"读取音频文件发生错误，错误信息：{e}")
         return {"msg": "读取音频文件发生错误", "code": 1}
+    finally:
+        if os.path.exists(audio_path):
+            os.remove(audio_path)
     rec_results = model.generate(input=audio_bytes, is_final=True, **param_dict)
     # 结果为空
     if len(rec_results[0]["text"] ) == 0:
