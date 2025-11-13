@@ -110,6 +110,11 @@ async def api_recognition(audio: UploadFile = File(..., description="audio file"
             os.remove(audio_path)
     rec_results = model.generate(input=audio_bytes, is_final=True, **param_dict)
     # 结果为空
+    if not rec_results or len(rec_results) == 0:
+        return {"text": "", "sentences": [], "code": 0}
+    elif len(rec_results[0].get("text", "")) == 0:
+        return {"text": "", "sentences": [], "code": 0}
+
     if len(rec_results[0]["text"] ) == 0:
         return {"text": "", "sentences": [], "code": 0}
     elif len(rec_results[0]["text"] ) > 0:
